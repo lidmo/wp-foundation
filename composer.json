@@ -9,7 +9,8 @@
     }
   ],
   "require": {
-    "illuminate/container": "^8.83"
+    "illuminate/container": "^8.83",
+    "monolog/monolog": "^2.9"
   },
   "autoload": {
     "psr-4": {
