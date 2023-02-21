@@ -3,7 +3,6 @@
 namespace Lidmo\WP\Foundation;
 
 use Illuminate\Container\Container;
-use Lidmo\WP\Foundation\Logger;
 use Lidmo\WP\Foundation\Contracts\Plugin as PluginContract;
 
 class Plugin extends Container implements PluginContract
