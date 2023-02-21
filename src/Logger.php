@@ -10,13 +10,13 @@ class Logger implements LoggerInterface
 {
     protected $logger;
 
-    protected static $path = WP_CONTENT_DIR ."/lidmo-logs/";
+    protected static $path = WP_CONTENT_DIR . "/lidmo-logs/";
 
     public function __construct(Plugin $plugin)
     {
         $name = $plugin->name();
         $this->logger = new \Monolog\Logger($name);
-        $this->logger->pushHandler(new StreamHandler(self::$path ."{$name}.log", \Monolog\Logger::DEBUG));
+        $this->logger->pushHandler(new StreamHandler(self::$path . "{$name}.log", \Monolog\Logger::DEBUG));
     }
 
     public function emergency($message, array $context = array()): void
@@ -62,5 +62,12 @@ class Logger implements LoggerInterface
     public function log($level, $message, array $context = array()): void
     {
         $this->logger->log($level, $message, $context);
+    }
+
+    private function setDir()
+    {
+        if (!is_dir(self::$path)) {
+            wp_mkdir_p(self::$path);
+        }
     }
 }
