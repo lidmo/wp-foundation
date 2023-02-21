@@ -1,0 +1,22 @@
+{
+  "name": "lidmo/wp-foundation",
+  "description": "WP Foundation",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Lídmo",
+      "email": "suporte@lidmo.com.br"
+    }
+  ],
+  "require": {
+    "illuminate/container": "^8.83"
+  },
+  "autoload": {
+    "psr-4": {
+      "Lidmo\\WP\\Foundation\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  }
+}
