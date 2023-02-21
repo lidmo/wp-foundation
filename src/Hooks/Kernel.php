@@ -29,11 +29,11 @@ class Kernel implements HooksKernel
 
             $instance = $this->plugin->make($name);
 
-            if (!method_exists($instance, 'handler')) {
-                throw new \Exception('Hook handler undefined');
+            if (!method_exists($instance, 'handle')) {
+                throw new \Exception('Hook handle undefined');
             }
             $call = 'add_' . $instance->getType();
-            $call($instance->getName(), [$instance, 'handler'], $instance->getPriority(), $instance->getAcceptedArgs());
+            $call($instance->getName(), [$instance, 'handle'], $instance->getPriority(), $instance->getAcceptedArgs());
         }
     }
 
