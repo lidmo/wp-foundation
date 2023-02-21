@@ -8,7 +8,7 @@ if (!function_exists('lidmo_plugin')) {
      *
      * @param string|null $abstract
      * @param array $parameters
-     * @return mixed|\Lidmo\WP\Plugin\Plugin
+     * @return mixed|\Lidmo\WP\Foundation\Plugin
      */
     function lidmo_plugin($abstract = null, array $parameters = [])
     {

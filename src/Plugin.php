@@ -1,9 +1,9 @@
 <?php
 
-namespace Lidmo\WP\Plugin;
+namespace Lidmo\WP\Foundation;
 
 use Illuminate\Container\Container;
-use Lidmo\WP\Plugin\Contracts\Plugin as PluginContract;
+use Lidmo\WP\Foundation\Contracts\Plugin as PluginContract;
 
 class Plugin extends Container implements PluginContract
 {
@@ -74,7 +74,7 @@ class Plugin extends Container implements PluginContract
     public function registerCoreContainerAliases()
     {
         foreach ([
-                     $this->name() => [self::class, \Illuminate\Contracts\Container\Container::class, \Lidmo\WP\Plugin\Contracts\Plugin::class, \Psr\Container\ContainerInterface::class],
+                     $this->name() => [self::class, \Illuminate\Contracts\Container\Container::class, \Lidmo\WP\Foundation\Contracts\Plugin::class, \Psr\Container\ContainerInterface::class],
                  ] as $key => $aliases) {
             foreach ($aliases as $alias) {
                 $this->alias($key, $alias);

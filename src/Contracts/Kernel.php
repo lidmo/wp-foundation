@@ -1,6 +1,6 @@
 <?php
 
-namespace Lidmo\WP\Plugin\Contracts;
+namespace Lidmo\WP\Foundation\Contracts;
 interface Kernel
 {
     public function run(): void;

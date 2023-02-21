@@ -1,9 +1,9 @@
 <?php
 
-namespace Lidmo\WP\Plugin\Hooks;
+namespace Lidmo\WP\Foundation\Hooks;
 
-use Lidmo\WP\Plugin\Contracts\Kernel as HooksKernel;
-use Lidmo\WP\Plugin\Contracts\Plugin;
+use Lidmo\WP\Foundation\Contracts\Kernel as HooksKernel;
+use Lidmo\WP\Foundation\Contracts\Plugin;
 
 class Kernel implements HooksKernel
 {

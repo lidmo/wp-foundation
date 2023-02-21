@@ -1,8 +1,8 @@
 <?php
 
-namespace Lidmo\WP\Plugin\Hooks;
+namespace Lidmo\WP\Foundation\Hooks;
 
-use Lidmo\WP\Plugin\Contracts\Hook as BaseHook;
+use Lidmo\WP\Foundation\Contracts\Hook as BaseHook;
 
 abstract class Hook implements BaseHook
 {
