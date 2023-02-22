@@ -10,7 +10,8 @@
   ],
   "require": {
     "illuminate/container": "^8.83",
-    "monolog/monolog": "^2.9"
+    "monolog/monolog": "^2.9",
+    "laravel/helpers": "^1.6"
   },
   "autoload": {
     "psr-4": {
