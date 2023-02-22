@@ -18,11 +18,11 @@ class Plugin extends Container implements PluginContract
 
     protected $templatePath;
 
-    public function __construct($name, $file = __FILE__, $version = '1.0.0', $databasePath = 'database/', $templatePath = 'templates/')
+    public function __construct($file, $version = '1.0.0', $name = null, $databasePath = 'database/', $templatePath = 'templates/')
     {
         $this->version = $version;
-        $this->name = $name;
         $this->path = plugin_dir_path($file);
+        $this->name = is_null($name) ? str_replace(WP_PLUGIN_DIR . '/', '', dirname($file)) : $name;
         $this->url = plugin_dir_url($file);
         $this->databasePath = $this->path . ltrim($databasePath, '/');
         $this->templatePath = $this->path . ltrim($templatePath, '/');
