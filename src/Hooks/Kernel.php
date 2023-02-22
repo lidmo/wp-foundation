@@ -15,13 +15,10 @@ class Kernel implements HooksKernel
         $this->plugin = $plugin;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function run(): void
     {
         foreach ($this->hooks as $hook){
-            if (! is_string($hook)) {
+            if (!is_string($hook)) {
                 continue;
             }
 
@@ -29,11 +26,10 @@ class Kernel implements HooksKernel
 
             $instance = $this->plugin->make($name);
 
-            if (!method_exists($instance, 'handle')) {
-                throw new \Exception('Hook handle undefined');
+            if (method_exists($instance, 'handle')) {
+                $call = 'add_' . $instance->getType();
+                $call($instance->getName(), [$instance, 'handle'], $instance->getPriority(), $instance->getAcceptedArgs());
             }
-            $call = 'add_' . $instance->getType();
-            $call($instance->getName(), [$instance, 'handle'], $instance->getPriority(), $instance->getAcceptedArgs());
         }
     }
 

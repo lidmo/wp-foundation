@@ -21,26 +21,14 @@ abstract class Hook implements BaseHook
         $this->type = str_singular(strtolower(array_pop($class)));
     }
 
-    /**
-     * @throws \Exception
-     */
     public function getName(): string
     {
-        if(isset($this->name)) {
-            return $this->name;
-        }
-        throw new \Exception('Hook name undefined');
+        return $this->name;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function getType(): string
     {
-        if(isset($this->type)) {
-            return $this->type;
-        }
-        throw new \Exception('Hook type undefined');
+        return $this->type;
     }
 
     public function getPriority(): int
