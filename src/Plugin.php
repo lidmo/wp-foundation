@@ -20,7 +20,7 @@ class Plugin extends Container implements PluginContract
         $this->pluginData = get_plugin_data($file);
         $this->path = plugin_dir_path($file);
         $this->url = plugin_dir_url($file);
-        $this->slug = str_replace(WP_PLUGIN_DIR . '/', '', dirname($file));
+        $this->slug = dirname(plugin_basename($file));
         $this->databasePath = $this->path . ltrim($databasePath, '/');
         $this->templatePath = $this->path . ltrim($templatePath, '/');
         $this->registerBaseBindings();
