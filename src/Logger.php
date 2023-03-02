@@ -14,7 +14,7 @@ class Logger implements LoggerInterface
 
     public function __construct(Plugin $plugin)
     {
-        $name = $plugin->name();
+        $name = $plugin->slug();
         $this->logger = new \Monolog\Logger($name);
         $this->logger->pushHandler(new StreamHandler(self::$path . "{$name}.log", \Monolog\Logger::DEBUG));
     }
