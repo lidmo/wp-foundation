@@ -20,6 +20,7 @@ class Plugin extends Container implements PluginContract
         $this->data = get_plugin_data($file);
         $this->path = plugin_dir_path($file);
         $this->url = plugin_dir_url($file);
+        $this->slug = str_replace(WP_PLUGIN_DIR . '/', '', dirname($file));
         $this->databasePath = $this->path . ltrim($databasePath, '/');
         $this->templatePath = $this->path . ltrim($templatePath, '/');
         $this->registerBaseBindings();
@@ -43,6 +44,11 @@ class Plugin extends Container implements PluginContract
         return $this->url;
     }
 
+    public function slug(): string
+    {
+        return $this->url;
+    }
+
     public function databasePath(): string
     {
         return $this->databasePath;
@@ -57,7 +63,7 @@ class Plugin extends Container implements PluginContract
     {
         static::setInstance($this);
 
-        $this->instance($this->name(), $this);
+        $this->instance($this->slug(), $this);
 
         $this->instance(Container::class, $this);
 
@@ -67,7 +73,7 @@ class Plugin extends Container implements PluginContract
     protected function registerCoreContainerAliases()
     {
         foreach ([
-                     $this->name() => [self::class, \Illuminate\Contracts\Container\Container::class, \Lidmo\WP\Foundation\Contracts\Plugin::class, \Psr\Container\ContainerInterface::class],
+                     $this->slug() => [self::class, \Illuminate\Contracts\Container\Container::class, \Lidmo\WP\Foundation\Contracts\Plugin::class, \Psr\Container\ContainerInterface::class],
                  ] as $key => $aliases) {
             foreach ($aliases as $alias) {
                 $this->alias($key, $alias);
