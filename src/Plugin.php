@@ -7,22 +7,18 @@ use Lidmo\WP\Foundation\Contracts\Plugin as PluginContract;
 
 class Plugin extends Container implements PluginContract
 {
-    protected $version;
-
-    protected $name;
-
     protected $path;
     protected $url;
 
+    protected $slug;
     protected $databasePath;
-
     protected $templatePath;
+    private $data;
 
-    public function __construct($file, $version = '1.0.0', $name = null, $databasePath = 'database/', $templatePath = 'templates/')
+    public function __construct($file, $databasePath = 'database/', $templatePath = 'templates/')
     {
-        $this->version = $version;
+        $this->data = get_plugin_data($file);
         $this->path = plugin_dir_path($file);
-        $this->name = is_null($name) ? str_replace(WP_PLUGIN_DIR . '/', '', dirname($file)) : $name;
         $this->url = plugin_dir_url($file);
         $this->databasePath = $this->path . ltrim($databasePath, '/');
         $this->templatePath = $this->path . ltrim($templatePath, '/');
@@ -30,15 +26,11 @@ class Plugin extends Container implements PluginContract
         $this->registerCoreContainerAliases();
     }
 
-
-    public function version(): string
-    {
-        return $this->version;
-    }
-
-    public function name(): string
-    {
-        return $this->name;
+    public function getPluginData(string $key = ''){
+        if($key !== '' && isset($this->data[$key])){
+            return $this->data[$key];
+        }
+        return $this->data;
     }
 
     public function path(): string
@@ -72,7 +64,7 @@ class Plugin extends Container implements PluginContract
         $this->instance('log', new Logger($this));
     }
 
-    public function registerCoreContainerAliases()
+    protected function registerCoreContainerAliases()
     {
         foreach ([
                      $this->name() => [self::class, \Illuminate\Contracts\Container\Container::class, \Lidmo\WP\Foundation\Contracts\Plugin::class, \Psr\Container\ContainerInterface::class],
