@@ -22,9 +22,7 @@ class Kernel implements HooksKernel
                 continue;
             }
 
-            [$name] = $this->parseHook($hook);
-
-            $instance = $this->plugin->make($name);
+            $instance = $this->plugin->make($hook);
 
             if (method_exists($instance, 'handle')) {
                 $call = 'add_' . $instance->getType();
