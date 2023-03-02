@@ -7,18 +7,18 @@ use Lidmo\WP\Foundation\Contracts\Hook as BaseHook;
 
 abstract class Hook implements BaseHook
 {
-    protected $name;
+    private $name;
 
-    protected $type;
+    private $type;
     protected $priority = 100;
 
     protected $acceptedArgs = 1;
 
     public function __construct()
     {
-        $class = explode('\\', get_class($this));
-        $this->name = Str::snake(array_pop($class));
-        $this->type = str_singular(strtolower(array_pop($class)));
+        $className = Str::snake(Str::afterLast(self::class, '\\'));
+        $this->name = Str::beforeLast($className, '_');
+        $this->type = Str::afterLast($className, '_');
     }
 
     public function getName(): string
