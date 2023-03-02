@@ -2,6 +2,10 @@
 
 use Illuminate\Container\Container;
 
+if(!function_exists('get_plugin_data')){
+    require_once ABSPATH . WPINC . '/plugin.php';
+}
+
 if (!function_exists('lidmo_plugin')) {
     /**
      * Get the available container instance.

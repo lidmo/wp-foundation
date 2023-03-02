@@ -13,11 +13,11 @@ class Plugin extends Container implements PluginContract
     protected $slug;
     protected $databasePath;
     protected $templatePath;
-    private $data;
+    private $pluginData;
 
     public function __construct($file, $databasePath = 'database/', $templatePath = 'templates/')
     {
-        $this->data = get_plugin_data($file);
+        $this->pluginData = get_plugin_data($file);
         $this->path = plugin_dir_path($file);
         $this->url = plugin_dir_url($file);
         $this->slug = str_replace(WP_PLUGIN_DIR . '/', '', dirname($file));
@@ -28,10 +28,10 @@ class Plugin extends Container implements PluginContract
     }
 
     public function getPluginData(string $key = ''){
-        if($key !== '' && isset($this->data[$key])){
-            return $this->data[$key];
+        if($key !== '' && isset($this->pluginData[$key])){
+            return $this->pluginData[$key];
         }
-        return $this->data;
+        return $this->pluginData;
     }
 
     public function path(): string
