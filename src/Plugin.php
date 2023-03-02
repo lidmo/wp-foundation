@@ -27,8 +27,9 @@ class Plugin extends Container implements PluginContract
         $this->registerCoreContainerAliases();
     }
 
-    public function getPluginData(string $key = ''){
-        if($key !== '' && isset($this->pluginData[$key])){
+    public function getPluginData(string $key = '')
+    {
+        if ($key !== '' && isset($this->pluginData[$key])) {
             return $this->pluginData[$key];
         }
         return $this->pluginData;
@@ -46,7 +47,7 @@ class Plugin extends Container implements PluginContract
 
     public function slug(): string
     {
-        return $this->url;
+        return $this->slug;
     }
 
     public function databasePath(): string
