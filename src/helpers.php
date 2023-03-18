@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Container\Container;
+use Lidmo\WP\Foundation\Container;
 
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
