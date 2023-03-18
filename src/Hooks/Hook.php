@@ -2,8 +2,8 @@
 
 namespace Lidmo\WP\Foundation\Hooks;
 
-use Illuminate\Support\Str;
 use Lidmo\WP\Foundation\Contracts\Hook as BaseHook;
+use Lidmo\WP\Foundation\Support\Str;
 
 abstract class Hook implements BaseHook
 {
