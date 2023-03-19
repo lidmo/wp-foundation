@@ -16,7 +16,7 @@ abstract class Hook implements BaseHook
 
     public function __construct()
     {
-        $className = Str::snake(Str::afterLast(static::class, '\\'));
+        $className = Str::snake(Str::replace('\\', '', Str::after(static::class, '\\Hooks\\')));
         $this->name = $this->name ?? Str::beforeLast($className, '_');
         $this->type = $this->type ?? Str::afterLast($className, '_');
     }
