@@ -7,9 +7,9 @@ use Lidmo\WP\Foundation\Support\Str;
 
 abstract class Hook implements BaseHook
 {
-    private $name;
+    protected $name;
 
-    private $type;
+    protected $type;
     protected $priority = 100;
 
     protected $acceptedArgs = 1;
