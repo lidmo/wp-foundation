@@ -23,11 +23,5 @@
   },
   "require-dev": {
     "composer/composer": "^2.6"
-  },
-  "scripts": {
-    "post-create-project-cmd": [
-      "Lidmo\\WP\\Foundation\\ComposerScripts::pluginInstall",
-      "composer dump-autoload"
-    ]
   }
 }
