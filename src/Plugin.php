@@ -2,28 +2,51 @@
 
 namespace Lidmo\WP\Foundation;
 
+use Lidmo\WP\Foundation\Contracts\Container as ContainerContract;
 use Lidmo\WP\Foundation\Contracts\Plugin as PluginContract;
 
-class Plugin extends Container implements PluginContract
+class Plugin implements PluginContract
 {
-    protected $path;
-    protected $url;
+    protected ContainerContract $container;
 
-    protected $slug;
-    protected $databasePath;
-    protected $templatePath;
-    private $pluginData;
+    protected string $slug;
+    protected string $path;
+    protected string $url;
+    protected string $databasePath;
+    protected string $templatePath;
+    protected string $routePath;
+    private array $pluginData;
 
-    public function __construct($file, $databasePath = 'database/', $templatePath = 'templates/')
+    public function __construct(ContainerContract $container, string $file)
     {
+        $this->container = $container;
+
         $this->pluginData = get_plugin_data($file);
         $this->path = plugin_dir_path($file);
         $this->url = plugin_dir_url($file);
         $this->slug = dirname(plugin_basename($file));
-        $this->databasePath = $this->path . ltrim($databasePath, '/');
-        $this->templatePath = $this->path . ltrim($templatePath, '/');
+
+        $this->setDatabasePath('database/');
+        $this->setTemplatePath('templates/');
+        $this->setRoutePath('routes/');
+
         $this->registerBaseBindings();
         $this->registerCoreContainerAliases();
+    }
+
+    public function setDatabasePath(string $databasePath): void
+    {
+        $this->databasePath = $this->path . ltrim($databasePath, '/');
+    }
+
+    public function setTemplatePath(string $templatePath): void
+    {
+        $this->templatePath = $this->path . ltrim($templatePath, '/');
+    }
+
+    public function setRoutePath(string $routePath): void
+    {
+        $this->routePath = $this->path . ltrim($routePath, '/');
     }
 
     public function getPluginData(string $key = '')
@@ -59,23 +82,29 @@ class Plugin extends Container implements PluginContract
         return $this->templatePath;
     }
 
-    protected function registerBaseBindings()
+    public function routePath(): string
     {
-        static::setInstance($this);
-
-        $this->instance($this->slug(), $this);
-
-        $this->instance(Container::class, $this);
-
+        return $this->routePath;
     }
 
-    protected function registerCoreContainerAliases()
+    protected function registerBaseBindings(): void
     {
-        foreach ([
-                     $this->slug() => [self::class, \Lidmo\WP\Foundation\Contracts\Container::class, \Lidmo\WP\Foundation\Contracts\Plugin::class, \Psr\Container\ContainerInterface::class],
-                 ] as $key => $aliases) {
+        $this->container->instance($this->slug, $this);
+        $this->container->instance(ContainerContract::class, $this->container);
+    }
+
+    protected function registerCoreContainerAliases(): void
+    {
+        $coreAliases = [
+            $this->slug => [
+                PluginContract::class,
+                ContainerContract::class,
+            ],
+        ];
+
+        foreach ($coreAliases as $key => $aliases) {
             foreach ($aliases as $alias) {
-                $this->alias($key, $alias);
+                $this->container->alias($key, $alias);
             }
         }
     }

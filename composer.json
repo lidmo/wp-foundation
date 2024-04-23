@@ -9,9 +9,12 @@
     }
   ],
   "require": {
+    "php": "^7.4 || ^8.0",
     "psr/container": "^1.0",
+    "guzzlehttp/psr7": "^2.6",
     "ext-mbstring": "*",
-    "ext-ctype": "*"
+    "ext-ctype": "*",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {

@@ -30,15 +30,4 @@ class Kernel implements HooksKernel
             }
         }
     }
-
-    protected function parseHook($hook): array
-    {
-        [$name, $parameters] = array_pad(explode(':', $hook, 2), 2, []);
-
-        if (is_string($parameters)) {
-            $parameters = explode(',', $parameters);
-        }
-
-        return [$name, $parameters];
-    }
 }
