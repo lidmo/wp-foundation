@@ -9,6 +9,7 @@
     }
   ],
   "require": {
+    "php": "^7.4 | ^8.0",
     "psr/container": "^1.0",
     "ext-mbstring": "*",
     "ext-ctype": "*"
@@ -22,6 +23,12 @@
     ]
   },
   "require-dev": {
-    "composer/composer": "^2.6"
+    "composer/composer": "^2.6",
+    "roots/wordpress": "^6.5.2"
+  },
+  "config": {
+    "allow-plugins": {
+      "roots/wordpress-core-installer": false
+    }
   }
 }
