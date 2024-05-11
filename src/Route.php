@@ -9,7 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class Route
 {
     private $middlewares = [];
-    private $prefix = '';
+    private $prefix = 'web';
     private $name = '';
     private $registeredRoutes = [];
     private $container;
@@ -39,31 +39,37 @@ class Route
         $this->registerRoute($route, 'PATCH', $callback, $middlewares);
     }
 
-    public function delete($route, $callback, $middlewares = [])
+    public function delete(string $route, $callback, $middlewares = [])
     {
         $this->registerRoute($route, 'DELETE', $callback, $middlewares);
     }
 
-    public function match($methods, $route, $callback, $middlewares = [])
+    public function match(array $methods, string $route, $callback, string|array $middlewares = [])
     {
-        foreach ((array)$methods as $method) {
+        foreach ($methods as $method) {
             $this->registerRoute($route, strtoupper($method), $callback, $middlewares);
         }
     }
 
-    public function prefix($prefix)
+    public function prefix(string $prefix)
     {
         $this->prefix = $prefix;
+        return $this;
     }
 
-    public function name($name)
+    public function name(string $name)
     {
         $this->name = $name;
+        return $this;
     }
 
-    public function middleware($middlewares)
+    public function middleware(string|array $middleware): Route
     {
-        $this->middlewares[$this->prefix . $this->name] = $middlewares;
+        if(is_string($middleware)) {
+            $middleware = [$middleware];
+        }
+        array_map([$this, 'addMiddleware'], $middleware);
+        return $this;
     }
 
     public function getRegisteredRoutes()
@@ -73,57 +79,46 @@ class Route
 
     private function registerRoute($route, $method, $callback, $middlewares)
     {
-        $route = $this->prefix . $route;
-
+        $this->name = $route;
         // Registrar middlewares
-        $this->middlewares[$route] = $middlewares;
+        $this->middleware($middlewares);
 
-        // Registrar a rota padrão do WordPress
-        add_action('init', function () use ($route, $method, $callback) {
-            add_rewrite_rule('^' . $route . '/?$', 'index.php?custom_route=1', 'top');
-        });
+        if($this->prefix === 'api'){
+            // Registrar rotas da REST API (rest_api_init)
+            add_action('rest_api_init', function () use ($route, $method, $callback) {
+                register_rest_route('lidmo/v1', '/' . $route, array(
+                    'methods' => $method,
+                    'callback' => function ($data) use ($route, $callback) {
+                        $request = $this->createServerRequest();
+                        $this->handleMiddlewares($route, $request, $callback);
+                    },
+                ));
+            });
+        }else {
+            // Registrar a rota padrão do WordPress
+            add_action('init', function () use ($route, $method, $callback) {
+                add_rewrite_rule('^' . $route . '/?$', 'index.php?custom_route=1', 'top');
+            });
 
-        add_action('template_redirect', function () use ($route, $method, $callback) {
-            if (get_query_var('custom_route')) {
-                if ($_SERVER['REQUEST_METHOD'] === $method) {
-                    $request = $this->createServerRequest();
-                    $this->handleMiddlewares($route, $request, $callback);
-                    exit();
+            add_action('template_redirect', function () use ($route, $method, $callback) {
+                if (get_query_var('custom_route')) {
+                    if ($_SERVER['REQUEST_METHOD'] === $method) {
+                        $request = $this->createServerRequest();
+                        $this->handleMiddlewares($route, $request, $callback);
+                        exit();
+                    }
                 }
-            }
-        });
-
-        // Registrar ação de administração (admin_post)
-        add_action('admin_post_' . $route, function () use ($callback) {
-            $request = $this->createServerRequest();
-            $this->handleMiddlewares($route, $request, $callback);
-        });
-
-        // Registrar requisições AJAX (wp_ajax_)
-        add_action('wp_ajax_' . $route, function () use ($callback) {
-            $request = $this->createServerRequest();
-            $this->handleMiddlewares($route, $request, $callback);
-        });
-
-        // Registrar rotas da REST API (rest_api_init)
-        add_action('rest_api_init', function () use ($route, $method, $callback) {
-            register_rest_route('custom-route-namespace/v1', '/' . $route, array(
-                'methods' => $method,
-                'callback' => function ($data) use ($route, $callback) {
-                    $request = $this->createServerRequest();
-                    $this->handleMiddlewares($route, $request, $callback);
-                },
-            ));
-        });
+            });
+        }
 
         // Registrar a rota
-        $this->registeredRoutes[] = [
-            'name' => $this->name,
-            'prefix' => $this->prefix,
+        $this->registeredRoutes[$this->prefix] = [
             'route' => $route,
             'method' => $method,
             'callback' => $callback,
         ];
+
+        $this->prefix = 'web';
     }
 
     private function createServerRequest(): ServerRequestInterface
@@ -134,7 +129,7 @@ class Route
 
         return new ServerRequest(
             $_SERVER['REQUEST_METHOD'],
-            'http://localhost' . $path
+            get_home_url($path)
         );
     }
 
@@ -174,5 +169,10 @@ class Route
                 }
             }
         }
+    }
+
+    private function addMiddleware(string $middleware): void
+    {
+        $this->middlewares[$this->name][] = $middleware;
     }
 }

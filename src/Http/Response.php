@@ -23,6 +23,8 @@ class Response
     {
         $body = json_encode($data);
         $response = $this->response->withHeader('Content-Type', 'application/json')
+            ->withHeader('X-Powered-By', 'Lídmo')
+            ->withHeader('X-Lidmo-Url', 'https://lidmo.com.br')
             ->withStatus($status)
             ->withBody(\GuzzleHttp\Psr7\stream_for($body));
 
